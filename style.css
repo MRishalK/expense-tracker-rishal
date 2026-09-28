@@ -196,3 +196,15 @@ button:hover {
 .transaction-item strong.expense {
     color: #dc2626;
 }
+
+#income {
+    color: #16a34a;
+}
+
+#expenses {
+    color: #dc2626;
+}
+
+#balance {
+    color: #4f46e5;
+}
