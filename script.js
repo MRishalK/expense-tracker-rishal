@@ -1,7 +1,7 @@
 const transactionForm = document.getElementById("transactionForm");
 const transactionList = document.getElementById("transactionList");
 
-let transactions = [];
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
 transactionForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -38,8 +38,10 @@ transactionForm.addEventListener("submit", function (event) {
 
     transactions.push(transaction);
 
-    renderTransactions();
-    updateSummary();
+saveTransactions();
+
+renderTransactions();
+updateSummary();
 
 transactionForm.reset();
 });
@@ -140,11 +142,13 @@ function deleteTransaction(id) {
     }
 
     transactions = transactions.filter(function (transaction) {
-        return transaction.id !== id;
-    });
+    return transaction.id !== id;
+});
 
-    renderTransactions();
-    updateSummary();
+saveTransactions();
+
+renderTransactions();
+updateSummary();
 }
 
 function editTransaction(id) {
@@ -164,11 +168,23 @@ function editTransaction(id) {
     document.getElementById("description").value = transaction.description;
 
     transactions = transactions.filter(function (item) {
-        return item.id !== id;
-    });
+    return item.id !== id;
+});
 
-    renderTransactions();
-    updateSummary();
+saveTransactions();
+
+renderTransactions();
+updateSummary();
 
     document.getElementById("amount").focus();
 }
+
+function saveTransactions() {
+    localStorage.setItem(
+        "transactions",
+        JSON.stringify(transactions)
+    );
+}
+
+renderTransactions();
+updateSummary();
