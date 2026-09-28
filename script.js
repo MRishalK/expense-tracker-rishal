@@ -1,6 +1,9 @@
 const transactionForm = document.getElementById("transactionForm");
 const transactionList = document.getElementById("transactionList");
 
+const filterType = document.getElementById("filterType");
+const filterCategory = document.getElementById("filterCategory");
+
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
 transactionForm.addEventListener("submit", function (event) {
@@ -50,60 +53,78 @@ function renderTransactions() {
 
     transactionList.innerHTML = "";
 
-    if (transactions.length === 0) {
+    const selectedType = filterType.value;
+    const selectedCategory = filterCategory.value;
+
+    const filteredTransactions = transactions.filter(function (transaction) {
+
+        const matchesType =
+            selectedType === "all" ||
+            transaction.type === selectedType;
+
+        const matchesCategory =
+            selectedCategory === "all" ||
+            transaction.category === selectedCategory;
+
+        return matchesType && matchesCategory;
+    });
+
+    if (filteredTransactions.length === 0) {
+
         transactionList.innerHTML = `
             <div class="empty-state">
-                <h3>No transactions yet</h3>
-                <p>Your transactions will appear here.</p>
+                <h3>No transactions found</h3>
+                <p>Try changing your filters or add a new transaction.</p>
             </div>
         `;
 
         return;
     }
 
-    transactions.forEach(function (transaction) {
+    filteredTransactions.forEach(function (transaction) {
 
         const transactionItem = document.createElement("div");
 
         transactionItem.className = "transaction-item";
 
         transactionItem.innerHTML = `
-    <div class="transaction-info">
+            <div class="transaction-info">
 
-        <div>
-            <h3>${transaction.category}</h3>
-            <p>${transaction.description || "No description"}</p>
-            <small>${transaction.date}</small>
-        </div>
+                <div>
+                    <h3>${transaction.category}</h3>
+                    <p>${transaction.description || "No description"}</p>
+                    <small>${transaction.date}</small>
+                </div>
 
-        <strong class="${transaction.type}">
-            ${transaction.type === "income" ? "+" : "-"}₹${transaction.amount.toFixed(2)}
-        </strong>
+                <strong class="${transaction.type}">
+                    ${transaction.type === "income" ? "+" : "-"}₹${transaction.amount.toFixed(2)}
+                </strong>
 
-    </div>
+            </div>
 
-    <div class="transaction-actions">
+            <div class="transaction-actions">
 
-        <button
-            class="edit-btn"
-            onclick="editTransaction(${transaction.id})"
-        >
-            Edit
-        </button>
+                <button
+                    class="edit-btn"
+                    onclick="editTransaction(${transaction.id})"
+                >
+                    Edit
+                </button>
 
-        <button
-            class="delete-btn"
-            onclick="deleteTransaction(${transaction.id})"
-        >
-            Delete
-        </button>
+                <button
+                    class="delete-btn"
+                    onclick="deleteTransaction(${transaction.id})"
+                >
+                    Delete
+                </button>
 
-    </div>
-`;
+            </div>
+        `;
 
         transactionList.appendChild(transactionItem);
     });
 }
+
 function updateSummary() {
 
     let totalIncome = 0;
@@ -188,3 +209,7 @@ function saveTransactions() {
 
 renderTransactions();
 updateSummary();
+
+filterType.addEventListener("change", renderTransactions);
+
+filterCategory.addEventListener("change", renderTransactions);
