@@ -208,3 +208,58 @@ button:hover {
 #balance {
     color: #4f46e5;
 }
+
+.transaction-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex: 1;
+}
+
+.transaction-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.transaction-actions button {
+    padding: 7px 11px;
+    font-size: 13px;
+}
+
+.edit-btn {
+    background: #f59e0b;
+}
+
+.edit-btn:hover {
+    background: #d97706;
+}
+
+.delete-btn {
+    background: #dc2626;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+
+@media (max-width: 600px) {
+
+    .transaction-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .transaction-info {
+        width: 100%;
+    }
+
+    .transaction-actions {
+        width: 100%;
+    }
+
+    .transaction-actions button {
+        flex: 1;
+    }
+
+}

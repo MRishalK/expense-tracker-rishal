@@ -66,16 +66,38 @@ function renderTransactions() {
         transactionItem.className = "transaction-item";
 
         transactionItem.innerHTML = `
-            <div>
-                <h3>${transaction.category}</h3>
-                <p>${transaction.description || "No description"}</p>
-                <small>${transaction.date}</small>
-            </div>
+    <div class="transaction-info">
 
-            <strong class="${transaction.type}">
-                ${transaction.type === "income" ? "+" : "-"}₹${transaction.amount.toFixed(2)}
-            </strong>
-        `;
+        <div>
+            <h3>${transaction.category}</h3>
+            <p>${transaction.description || "No description"}</p>
+            <small>${transaction.date}</small>
+        </div>
+
+        <strong class="${transaction.type}">
+            ${transaction.type === "income" ? "+" : "-"}₹${transaction.amount.toFixed(2)}
+        </strong>
+
+    </div>
+
+    <div class="transaction-actions">
+
+        <button
+            class="edit-btn"
+            onclick="editTransaction(${transaction.id})"
+        >
+            Edit
+        </button>
+
+        <button
+            class="delete-btn"
+            onclick="deleteTransaction(${transaction.id})"
+        >
+            Delete
+        </button>
+
+    </div>
+`;
 
         transactionList.appendChild(transactionItem);
     });
@@ -105,4 +127,48 @@ function updateSummary() {
 
     document.getElementById("balance").textContent =
         `₹${balance.toFixed(2)}`;
+}
+
+function deleteTransaction(id) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this transaction?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    transactions = transactions.filter(function (transaction) {
+        return transaction.id !== id;
+    });
+
+    renderTransactions();
+    updateSummary();
+}
+
+function editTransaction(id) {
+
+    const transaction = transactions.find(function (item) {
+        return item.id === id;
+    });
+
+    if (!transaction) {
+        return;
+    }
+
+    document.getElementById("type").value = transaction.type;
+    document.getElementById("amount").value = transaction.amount;
+    document.getElementById("category").value = transaction.category;
+    document.getElementById("date").value = transaction.date;
+    document.getElementById("description").value = transaction.description;
+
+    transactions = transactions.filter(function (item) {
+        return item.id !== id;
+    });
+
+    renderTransactions();
+    updateSummary();
+
+    document.getElementById("amount").focus();
 }
