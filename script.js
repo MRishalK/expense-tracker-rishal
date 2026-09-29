@@ -45,6 +45,7 @@ saveTransactions();
 
 renderTransactions();
 updateSummary();
+updateMonthlySummary();
 
 transactionForm.reset();
 });
@@ -170,6 +171,7 @@ saveTransactions();
 
 renderTransactions();
 updateSummary();
+updateMonthlySummary();
 }
 
 function editTransaction(id) {
@@ -196,6 +198,7 @@ saveTransactions();
 
 renderTransactions();
 updateSummary();
+updateMonthlySummary();
 
     document.getElementById("amount").focus();
 }
@@ -209,7 +212,46 @@ function saveTransactions() {
 
 renderTransactions();
 updateSummary();
+updateMonthlySummary();
 
 filterType.addEventListener("change", renderTransactions);
 
 filterCategory.addEventListener("change", renderTransactions);
+
+function updateMonthlySummary() {
+    const today = new Date();
+
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+
+    const monthName = today.toLocaleString("default", {
+        month: "long"
+    });
+
+    document.getElementById("monthTitle").textContent =
+        `${monthName} ${currentYear}`;
+
+    let monthlyExpenses = 0;
+    let monthlyCount = 0;
+
+    transactions.forEach(function (transaction) {
+        const transactionDate = new Date(transaction.date);
+
+        if (
+            transaction.type === "expense" &&
+            transactionDate.getFullYear() === currentYear &&
+            transactionDate.getMonth() === currentMonth
+        ) {
+            monthlyExpenses += transaction.amount;
+            monthlyCount++;
+        }
+    });
+
+    document.getElementById("monthlyExpenses").textContent =
+        `₹${monthlyExpenses.toFixed(2)}`;
+
+    document.getElementById("monthlyCount").textContent =
+        monthlyCount;
+}
+
+updateMonthlySummary();

@@ -498,3 +498,97 @@ form button:hover {
         flex: 1;
     }
 }
+
+/* ================================
+   Monthly Summary
+================================ */
+
+.monthly-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+
+    background: var(--card);
+
+    padding: 22px 25px;
+
+    margin-bottom: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow);
+}
+
+.monthly-summary h2 {
+    font-size: 20px;
+    margin-top: 3px;
+}
+
+.monthly-stats {
+    display: flex;
+    gap: 35px;
+}
+
+.monthly-stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.monthly-stats span {
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.monthly-stats strong {
+    font-size: 18px;
+}
+
+/* ================================
+   Better Main Layout
+================================ */
+
+.main-content {
+    grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
+}
+
+.transactions-section {
+    min-width: 0;
+}
+
+.transaction-list {
+    width: 100%;
+}
+
+/* ================================
+   Responsive Monthly Summary
+================================ */
+
+@media (max-width: 850px) {
+
+    .monthly-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .monthly-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .monthly-summary {
+        padding: 20px;
+    }
+
+    .monthly-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+}
