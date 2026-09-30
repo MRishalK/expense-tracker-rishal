@@ -1,7 +1,11 @@
+
+
 # 💰 Expense Tracker
 
 A simple and responsive web-based Expense Tracker that helps users manage their income and expenses in one place.
+## 🌐 Live Demo
 
+👉 [View Expense Tracker Live](https://mrishalk.github.io/expense-tracker-rishal/)
 ## ✨ Features
 
 * Add income and expense transactions
