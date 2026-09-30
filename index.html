@@ -2,130 +2,226 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Expense Tracker</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 <body>
 
     <div class="container">
 
-        <!-- Header -->
         <header>
-            <div class="header-content">
-                <div>
-                    <div class="eyebrow">PERSONAL FINANCE</div>
 
-                    <h1>Expense Tracker</h1>
+            <div class="header-content">
+
+                <div>
+
+                    <div class="eyebrow">
+                        PERSONAL FINANCE
+                    </div>
+
+
+                    <h1>
+                        Expense Tracker
+                    </h1>
+
 
                     <p>
-                        Track your income and expenses in one simple dashboard.
+                        Track your income and expenses
+                        in one simple dashboard.
                     </p>
+
                 </div>
+
             </div>
+
         </header>
 
+        <!-- ================================
+             Summary Cards
+        ================================= -->
 
-        <!-- Summary Cards -->
         <section class="summary">
 
-            <div class="summary-card">
-                <h3>Total Balance</h3>
-                <p id="balance">₹0.00</p>
-            </div>
 
             <div class="summary-card">
-                <h3>Total Income</h3>
-                <p id="income">₹0.00</p>
-            </div>
 
-            <div class="summary-card">
-                <h3>Total Expenses</h3>
-                <p id="expenses">₹0.00</p>
-            </div>
+                <h3>
+                    Total Balance
+                </h3>
 
-        </section>
-
-
-        <!-- Monthly Summary -->
-        <section class="monthly-summary">
-
-            <div>
-                <span class="eyebrow">MONTHLY OVERVIEW</span>
-
-                <h2 id="monthTitle">This Month</h2>
-            </div>
-
-            <div class="monthly-stats">
-
-                <div>
-                    <span>Total Expenses</span>
-
-                    <strong id="monthlyExpenses">
-                        ₹0.00
-                    </strong>
-                </div>
-
-                <div>
-                    <span>Expense Transactions</span>
-
-                    <strong id="monthlyCount">
-                        0
-                    </strong>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Expense Chart -->
-        <section class="chart-section">
-
-            <div>
-                <span class="eyebrow">EXPENSE BREAKDOWN</span>
-
-                <h2>Expenses by Category</h2>
-
-                <p class="section-description">
-                    See how your expenses are distributed across categories.
+                <p id="balance">
+                    ₹0.00
                 </p>
+
             </div>
 
-            <div id="expenseChart" class="expense-chart"></div>
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <p id="income">
+                    ₹0.00
+                </p>
+
+            </div>
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+                <p id="expenses">
+                    ₹0.00
+                </p>
+
+            </div>
+
+
+        </section>
+>
+        <section class="analytics-row">
+
+            <section class="monthly-summary">
+
+                <div>
+
+                    <span class="eyebrow">
+                        MONTHLY OVERVIEW
+                    </span>
+
+                    <h2 id="monthTitle">
+                        This Month
+                    </h2>
+
+                </div>
+
+                <div class="monthly-stats">
+
+
+                    <div>
+
+                        <span>
+                            Total Expenses
+                        </span>
+
+
+                        <strong id="monthlyExpenses">
+                            ₹0.00
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Expense Transactions
+                        </span>
+
+                        <strong id="monthlyCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ================================
+                 Expense Breakdown
+            ================================= -->
+
+            <section class="chart-section">
+
+                <div>
+
+                    <span class="eyebrow">
+                        EXPENSE BREAKDOWN
+                    </span>
+
+
+                    <h2>
+                        Expenses by Category
+                    </h2>
+
+
+                    <p class="section-description">
+                        See how your expenses are
+                        distributed across categories.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="expenseChart"
+                    class="expense-chart"
+                ></div>
+
+
+            </section>
+
 
         </section>
 
+        <!-- ================================
+             Main Content
+        ================================= -->
 
-        <!-- Main Content -->
         <section class="main-content">
 
+            <!-- ================================
+                 Add Transaction
+            ================================= -->
 
-            <!-- Add Transaction -->
             <div class="form-section">
 
-                <h2>Add Transaction</h2>
+
+                <h2>
+                    Add Transaction
+                </h2>
+
 
                 <p class="section-description">
-                    Record your income or expenses to keep your finances organized.
+                    Record your income or expenses
+                    to keep your finances organized.
                 </p>
 
-
                 <form id="transactionForm">
+
 
                     <label for="type">
                         Transaction Type
                     </label>
 
-                    <select id="type" required>
+
+                    <select
+                        id="type"
+                        required
+                    >
 
                         <option value="expense">
                             Expense
                         </option>
+
 
                         <option value="income">
                             Income
@@ -133,10 +229,10 @@
 
                     </select>
 
-
                     <label for="amount">
                         Amount
                     </label>
+
 
                     <input
                         type="number"
@@ -148,39 +244,51 @@
                     >
 
 
+
                     <label for="category">
                         Category
                     </label>
 
-                    <select id="category" required>
+
+                    <select
+                        id="category"
+                        required
+                    >
 
                         <option value="">
                             Select Category
                         </option>
 
+
                         <option value="Food">
                             Food
                         </option>
+
 
                         <option value="Transport">
                             Transport
                         </option>
 
+
                         <option value="Shopping">
                             Shopping
                         </option>
+
 
                         <option value="Bills">
                             Bills
                         </option>
 
+
                         <option value="Entertainment">
                             Entertainment
                         </option>
 
+
                         <option value="Salary">
                             Salary
                         </option>
+
 
                         <option value="Other">
                             Other
@@ -188,10 +296,10 @@
 
                     </select>
 
-
                     <label for="date">
                         Date
                     </label>
+
 
                     <input
                         type="date"
@@ -199,17 +307,16 @@
                         required
                     >
 
-
                     <label for="description">
                         Description
                     </label>
+
 
                     <textarea
                         id="description"
                         placeholder="Enter description"
                         rows="3"
                     ></textarea>
-
 
                     <button type="submit">
                         Add Transaction
@@ -219,18 +326,23 @@
 
             </div>
 
+            <!-- ================================
+                 Transactions
+            ================================= -->
 
-            <!-- Transactions -->
             <div class="transactions-section">
 
-                <h2>Transactions</h2>
+                <h2>
+                    Transactions
+                </h2>
 
                 <p class="section-description">
-                    View and manage your recent financial activity.
+                    View and manage your recent
+                    financial activity.
                 </p>
 
-
                 <!-- Filters -->
+
                 <div class="filters">
 
                     <select id="filterType">
@@ -239,9 +351,11 @@
                             All Transactions
                         </option>
 
+
                         <option value="income">
                             Income
                         </option>
+
 
                         <option value="expense">
                             Expense
@@ -256,17 +370,21 @@
                             All Categories
                         </option>
 
+
                         <option value="Food">
                             Food
                         </option>
+
 
                         <option value="Transport">
                             Transport
                         </option>
 
+
                         <option value="Shopping">
                             Shopping
                         </option>
+
 
                         <option value="Bills">
                             Bills
@@ -280,6 +398,7 @@
                             Salary
                         </option>
 
+
                         <option value="Other">
                             Other
                         </option>
@@ -288,8 +407,8 @@
 
                 </div>
 
-
                 <!-- Transaction List -->
+
                 <div id="transactionList">
 
                     <div class="empty-state">
@@ -298,20 +417,29 @@
                             No transactions yet
                         </h3>
 
+
                         <p>
-                            Your transactions will appear here.
+                            Your transactions will
+                            appear here.
                         </p>
 
                     </div>
 
                 </div>
 
+                <!-- Pagination -->
+
+                <div
+                    id="pagination"
+                    class="pagination"
+                ></div>
+
+
             </div>
 
         </section>
 
     </div>
-
 
     <script src="script.js"></script>
 

@@ -6,10 +6,17 @@ const filterCategory = document.getElementById("filterCategory");
 
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
+let editingTransactionId = null;
+let currentPage = 1;
+const transactionsPerPage = 5;
+
+// Set today's date by default
 document.getElementById("date").value =
     new Date().toISOString().split("T")[0];
+
+
 // ========================================
-// Add Transaction
+// Add / Update Transaction
 // ========================================
 
 transactionForm.addEventListener("submit", function (event) {
@@ -39,17 +46,56 @@ transactionForm.addEventListener("submit", function (event) {
     }
 
 
-    const transaction = {
-        id: Date.now(),
-        type: type,
-        amount: amount,
-        category: category,
-        date: date,
-        description: description
-    };
+    // Update existing transaction
+    if (editingTransactionId !== null) {
+
+        const transaction = transactions.find(function (item) {
+
+            return item.id === editingTransactionId;
+
+        });
 
 
-    transactions.push(transaction);
+        if (transaction) {
+
+            transaction.type = type;
+            transaction.amount = amount;
+            transaction.category = category;
+            transaction.date = date;
+            transaction.description = description;
+
+        }
+
+
+        editingTransactionId = null;
+
+
+        const submitButton =
+            transactionForm.querySelector("button[type='submit']");
+
+        submitButton.textContent = "Add Transaction";
+
+    }
+
+    // Add new transaction
+    else {
+
+        const transaction = {
+
+            id: Date.now(),
+            type: type,
+            amount: amount,
+            category: category,
+            date: date,
+            description: description
+
+        };
+
+
+        transactions.push(transaction);
+
+    }
+
 
     saveTransactions();
 
@@ -58,7 +104,14 @@ transactionForm.addEventListener("submit", function (event) {
     updateMonthlySummary();
     updateExpenseChart();
 
+
     transactionForm.reset();
+
+
+    // Set today's date again after reset
+    document.getElementById("date").value =
+        new Date().toISOString().split("T")[0];
+
 });
 
 
@@ -66,13 +119,21 @@ transactionForm.addEventListener("submit", function (event) {
 // Display Transactions
 // ========================================
 
+// ========================================
+// Display Transactions with Pagination
+// ========================================
+
 function renderTransactions() {
 
-    transactionList.innerHTML = "";
+    transactionList.innerHTML = `
+        <div class="transaction-list"></div>
+    `;
+
+    const transactionListContainer =
+        transactionList.querySelector(".transaction-list");
 
     const selectedType = filterType.value;
     const selectedCategory = filterCategory.value;
-
 
     const filteredTransactions = transactions.filter(function (transaction) {
 
@@ -88,31 +149,76 @@ function renderTransactions() {
     });
 
 
+    // No transactions found
     if (filteredTransactions.length === 0) {
 
         transactionList.innerHTML = `
             <div class="empty-state">
+
                 <h3>No transactions found</h3>
-                <p>Try changing your filters or add a new transaction.</p>
+
+                <p>
+                    Try changing your filters or add a new transaction.
+                </p>
+
             </div>
         `;
+
+        renderPagination(0);
 
         return;
     }
 
 
-    filteredTransactions.forEach(function (transaction) {
+    // Calculate total pages
+    const totalPages =
+        Math.ceil(
+            filteredTransactions.length /
+            transactionsPerPage
+        );
 
-        const transactionItem = document.createElement("div");
 
-        transactionItem.className = "transaction-item";
+    // Make sure current page is valid
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
 
+
+    // Calculate starting and ending transaction
+    const startIndex =
+        (currentPage - 1) *
+        transactionsPerPage;
+
+    const endIndex =
+        startIndex +
+        transactionsPerPage;
+
+
+    const pageTransactions =
+        filteredTransactions.slice(
+            startIndex,
+            endIndex
+        );
+
+
+    // Display transactions for current page
+    pageTransactions.forEach(function (transaction) {
+
+        const transactionItem =
+            document.createElement("div");
+
+        transactionItem.className =
+            "transaction-item";
 
         transactionItem.innerHTML = `
+
             <div class="transaction-info">
 
                 <div>
-                    <h3>${transaction.category}</h3>
+
+                    <h3>
+                        ${transaction.category}
+                    </h3>
 
                     <p>
                         ${transaction.description || "No description"}
@@ -121,6 +227,7 @@ function renderTransactions() {
                     <small>
                         ${transaction.date}
                     </small>
+
                 </div>
 
                 <strong class="${transaction.type}">
@@ -147,11 +254,123 @@ function renderTransactions() {
                 </button>
 
             </div>
+
         `;
 
+        transactionListContainer.appendChild(
+            transactionItem
+        );
 
-        transactionList.appendChild(transactionItem);
     });
+
+
+    // Update pagination buttons
+    renderPagination(totalPages);
+}
+// ========================================
+// Render Pagination
+// ========================================
+
+function renderPagination(totalPages) {
+
+    const pagination =
+        document.getElementById("pagination");
+
+    pagination.innerHTML = "";
+
+
+    // Don't show pagination if only one page
+    if (totalPages <= 1) {
+        return;
+    }
+
+
+    // Previous button
+    const previousButton =
+        document.createElement("button");
+
+    previousButton.textContent = "←";
+
+    previousButton.disabled =
+        currentPage === 1;
+
+    previousButton.addEventListener(
+        "click",
+        function () {
+
+            if (currentPage > 1) {
+
+                currentPage--;
+
+                renderTransactions();
+
+            }
+
+        }
+    );
+
+    pagination.appendChild(previousButton);
+
+
+    // Page number buttons
+    for (
+        let page = 1;
+        page <= totalPages;
+        page++
+    ) {
+
+        const pageButton =
+            document.createElement("button");
+
+        pageButton.textContent = page;
+
+        if (page === currentPage) {
+            pageButton.classList.add("active");
+        }
+
+
+        pageButton.addEventListener(
+            "click",
+            function () {
+
+                currentPage = page;
+
+                renderTransactions();
+
+            }
+        );
+
+
+        pagination.appendChild(pageButton);
+
+    }
+
+
+    // Next button
+    const nextButton =
+        document.createElement("button");
+
+    nextButton.textContent = "→";
+
+    nextButton.disabled =
+        currentPage === totalPages;
+
+    nextButton.addEventListener(
+        "click",
+        function () {
+
+            if (currentPage < totalPages) {
+
+                currentPage++;
+
+                renderTransactions();
+
+            }
+
+        }
+    );
+
+    pagination.appendChild(nextButton);
 }
 
 
@@ -171,7 +390,9 @@ function updateSummary() {
 
             totalIncome += transaction.amount;
 
-        } else {
+        }
+
+        else {
 
             totalExpenses += transaction.amount;
 
@@ -180,17 +401,21 @@ function updateSummary() {
     });
 
 
-    const balance = totalIncome - totalExpenses;
+    const balance =
+        totalIncome - totalExpenses;
 
 
     document.getElementById("income").textContent =
         `₹${totalIncome.toFixed(2)}`;
 
+
     document.getElementById("expenses").textContent =
         `₹${totalExpenses.toFixed(2)}`;
 
+
     document.getElementById("balance").textContent =
         `₹${balance.toFixed(2)}`;
+
 }
 
 
@@ -206,7 +431,9 @@ function deleteTransaction(id) {
 
 
     if (!confirmed) {
+
         return;
+
     }
 
 
@@ -223,6 +450,7 @@ function deleteTransaction(id) {
     updateSummary();
     updateMonthlySummary();
     updateExpenseChart();
+
 }
 
 
@@ -240,42 +468,45 @@ function editTransaction(id) {
 
 
     if (!transaction) {
+
         return;
+
     }
+
+
+    editingTransactionId = id;
 
 
     document.getElementById("type").value =
         transaction.type;
 
+
     document.getElementById("amount").value =
         transaction.amount;
+
 
     document.getElementById("category").value =
         transaction.category;
 
+
     document.getElementById("date").value =
         transaction.date;
+
 
     document.getElementById("description").value =
         transaction.description;
 
 
-    transactions = transactions.filter(function (item) {
-
-        return item.id !== id;
-
-    });
+    const submitButton =
+        transactionForm.querySelector("button[type='submit']");
 
 
-    saveTransactions();
-
-    renderTransactions();
-    updateSummary();
-    updateMonthlySummary();
-    updateExpenseChart();
+    submitButton.textContent =
+        "Update Transaction";
 
 
     document.getElementById("amount").focus();
+
 }
 
 
@@ -289,6 +520,7 @@ function saveTransactions() {
         "transactions",
         JSON.stringify(transactions)
     );
+
 }
 
 
@@ -300,13 +532,17 @@ function updateMonthlySummary() {
 
     const today = new Date();
 
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
+    const currentYear =
+        today.getFullYear();
+
+    const currentMonth =
+        today.getMonth();
 
 
-    const monthName = today.toLocaleString("default", {
-        month: "long"
-    });
+    const monthName =
+        today.toLocaleString("default", {
+            month: "long"
+        });
 
 
     document.getElementById("monthTitle").textContent =
@@ -319,7 +555,8 @@ function updateMonthlySummary() {
 
     transactions.forEach(function (transaction) {
 
-        const transactionDate = new Date(transaction.date);
+        const transactionDate =
+            new Date(transaction.date);
 
 
         if (
@@ -331,6 +568,7 @@ function updateMonthlySummary() {
             monthlyExpenses += transaction.amount;
 
             monthlyCount++;
+
         }
 
     });
@@ -339,8 +577,10 @@ function updateMonthlySummary() {
     document.getElementById("monthlyExpenses").textContent =
         `₹${monthlyExpenses.toFixed(2)}`;
 
+
     document.getElementById("monthlyCount").textContent =
         monthlyCount;
+
 }
 
 
@@ -367,8 +607,10 @@ function updateExpenseChart() {
 
             }
 
+
             categoryTotals[transaction.category] +=
                 transaction.amount;
+
         }
 
     });
@@ -377,18 +619,26 @@ function updateExpenseChart() {
     expenseChart.innerHTML = "";
 
 
-    const categories = Object.keys(categoryTotals);
+    const categories =
+        Object.keys(categoryTotals);
 
 
     if (categories.length === 0) {
 
         expenseChart.innerHTML = `
+
             <div class="chart-empty">
-                <p>No expense data available yet.</p>
+
+                <p>
+                    No expense data available yet.
+                </p>
+
             </div>
+
         `;
 
         return;
+
     }
 
 
@@ -398,7 +648,8 @@ function updateExpenseChart() {
 
     categories.forEach(function (category) {
 
-        const amount = categoryTotals[category];
+        const amount =
+            categoryTotals[category];
 
 
         const percentage =
@@ -409,19 +660,24 @@ function updateExpenseChart() {
             document.createElement("div");
 
 
-        chartItem.className = "chart-item";
+        chartItem.className =
+            "chart-item";
 
 
         chartItem.innerHTML = `
+
             <div class="chart-label">
 
-                <span>${category}</span>
+                <span>
+                    ${category}
+                </span>
 
                 <strong>
                     ₹${amount.toFixed(2)}
                 </strong>
 
             </div>
+
 
             <div class="chart-bar-background">
 
@@ -431,12 +687,14 @@ function updateExpenseChart() {
                 ></div>
 
             </div>
+
         `;
 
 
         expenseChart.appendChild(chartItem);
 
     });
+
 }
 
 
@@ -459,10 +717,23 @@ updateExpenseChart();
 
 filterType.addEventListener(
     "change",
-    renderTransactions
+    function () {
+
+        currentPage = 1;
+
+        renderTransactions();
+
+    }
 );
+
 
 filterCategory.addEventListener(
     "change",
-    renderTransactions
+    function () {
+
+        currentPage = 1;
+
+        renderTransactions();
+
+    }
 );
