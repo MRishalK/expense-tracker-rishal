@@ -6,7 +6,8 @@ const filterCategory = document.getElementById("filterCategory");
 
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-
+document.getElementById("date").value =
+    new Date().toISOString().split("T")[0];
 // ========================================
 // Add Transaction
 // ========================================
