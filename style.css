@@ -592,3 +592,101 @@ form button:hover {
     }
 
 }
+
+/* ================================
+   Expense Chart
+================================ */
+
+.chart-section {
+    background: var(--card);
+    padding: 25px;
+    margin-bottom: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow);
+}
+
+.chart-section h2 {
+    font-size: 20px;
+    margin-top: 3px;
+    margin-bottom: 6px;
+}
+
+.expense-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+.chart-item {
+    width: 100%;
+}
+
+.chart-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+}
+
+.chart-label span {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chart-label strong {
+    font-size: 13px;
+}
+
+.chart-bar-background {
+    width: 100%;
+    height: 10px;
+
+    background: var(--primary-light);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.chart-bar {
+    height: 100%;
+
+    background: var(--primary);
+
+    border-radius: 20px;
+
+    transition: width 0.4s ease;
+}
+
+.chart-empty {
+    padding: 25px 0;
+
+    text-align: center;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+}
+
+
+/* ================================
+   Chart Responsive Design
+================================ */
+
+@media (max-width: 600px) {
+
+    .chart-section {
+        padding: 19px;
+    }
+
+    .expense-chart {
+        gap: 14px;
+    }
+
+}
